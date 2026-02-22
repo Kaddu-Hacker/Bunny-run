@@ -1,0 +1,166 @@
+build	Set up job	﻿2026-02-22T19:00:36.3578347Z Current runner version: '2.331.0'
+build	Set up job	2026-02-22T19:00:36.3602038Z ##[group]Runner Image Provisioner
+build	Set up job	2026-02-22T19:00:36.3602879Z Hosted Compute Agent
+build	Set up job	2026-02-22T19:00:36.3603541Z Version: 20260123.484
+build	Set up job	2026-02-22T19:00:36.3604143Z Commit: 6bd6555ca37d84114959e1c76d2c01448ff61c5d
+build	Set up job	2026-02-22T19:00:36.3604793Z Build Date: 2026-01-23T19:41:17Z
+build	Set up job	2026-02-22T19:00:36.3605497Z Worker ID: {610dfb28-adf5-4963-8115-00ed1ae42b9a}
+build	Set up job	2026-02-22T19:00:36.3606173Z Azure Region: westus
+build	Set up job	2026-02-22T19:00:36.3606718Z ##[endgroup]
+build	Set up job	2026-02-22T19:00:36.3608101Z ##[group]Operating System
+build	Set up job	2026-02-22T19:00:36.3609081Z Ubuntu
+build	Set up job	2026-02-22T19:00:36.3609511Z 24.04.3
+build	Set up job	2026-02-22T19:00:36.3610021Z LTS
+build	Set up job	2026-02-22T19:00:36.3610522Z ##[endgroup]
+build	Set up job	2026-02-22T19:00:36.3610996Z ##[group]Runner Image
+build	Set up job	2026-02-22T19:00:36.3611580Z Image: ubuntu-24.04
+build	Set up job	2026-02-22T19:00:36.3612069Z Version: 20260201.15.1
+build	Set up job	2026-02-22T19:00:36.3613053Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260201.15/images/ubuntu/Ubuntu2404-Readme.md
+build	Set up job	2026-02-22T19:00:36.3614752Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260201.15
+build	Set up job	2026-02-22T19:00:36.3615631Z ##[endgroup]
+build	Set up job	2026-02-22T19:00:36.3616607Z ##[group]GITHUB_TOKEN Permissions
+build	Set up job	2026-02-22T19:00:36.3618630Z Contents: write
+build	Set up job	2026-02-22T19:00:36.3619202Z Metadata: read
+build	Set up job	2026-02-22T19:00:36.3619831Z ##[endgroup]
+build	Set up job	2026-02-22T19:00:36.3621958Z Secret source: Actions
+build	Set up job	2026-02-22T19:00:36.3622625Z Prepare workflow directory
+build	Set up job	2026-02-22T19:00:36.3936205Z Prepare all required actions
+build	Set up job	2026-02-22T19:00:36.3972964Z Getting action download info
+build	Set up job	2026-02-22T19:00:36.8665391Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+build	Set up job	2026-02-22T19:00:36.9557995Z Download action repository 'actions/setup-java@v4' (SHA:c1e323688fd81a25caa38c78aa6df2d33d3e20d9)
+build	Set up job	2026-02-22T19:00:37.5676213Z Download action repository 'softprops/action-gh-release@v2' (SHA:a06a81a03ee405af7f2048a818ed3f03bbf83c7b)
+build	Set up job	2026-02-22T19:00:38.1236940Z Complete job name: build
+build	Checkout code	﻿2026-02-22T19:00:38.1954757Z ##[group]Run actions/checkout@v4
+build	Checkout code	2026-02-22T19:00:38.1955660Z with:
+build	Checkout code	2026-02-22T19:00:38.1956103Z   repository: Kaddu-Hacker/Bunny-run
+build	Checkout code	2026-02-22T19:00:38.1956830Z   token: ***
+build	Checkout code	2026-02-22T19:00:38.1957239Z   ssh-strict: true
+build	Checkout code	2026-02-22T19:00:38.1957655Z   ssh-user: git
+build	Checkout code	2026-02-22T19:00:38.1958082Z   persist-credentials: true
+build	Checkout code	2026-02-22T19:00:38.1958755Z   clean: true
+build	Checkout code	2026-02-22T19:00:38.1959193Z   sparse-checkout-cone-mode: true
+build	Checkout code	2026-02-22T19:00:38.1959701Z   fetch-depth: 1
+build	Checkout code	2026-02-22T19:00:38.1960122Z   fetch-tags: false
+build	Checkout code	2026-02-22T19:00:38.1960567Z   show-progress: true
+build	Checkout code	2026-02-22T19:00:38.1961004Z   lfs: false
+build	Checkout code	2026-02-22T19:00:38.1961399Z   submodules: false
+build	Checkout code	2026-02-22T19:00:38.1961848Z   set-safe-directory: true
+build	Checkout code	2026-02-22T19:00:38.1962578Z ##[endgroup]
+build	Checkout code	2026-02-22T19:00:38.3037414Z Syncing repository: Kaddu-Hacker/Bunny-run
+build	Checkout code	2026-02-22T19:00:38.3039552Z ##[group]Getting Git version info
+build	Checkout code	2026-02-22T19:00:38.3040332Z Working directory is '/home/runner/work/Bunny-run/Bunny-run'
+build	Checkout code	2026-02-22T19:00:38.3041378Z [command]/usr/bin/git version
+build	Checkout code	2026-02-22T19:00:38.3112957Z git version 2.52.0
+build	Checkout code	2026-02-22T19:00:38.3139141Z ##[endgroup]
+build	Checkout code	2026-02-22T19:00:38.3153252Z Temporarily overriding HOME='/home/runner/work/_temp/3ba08247-96ac-42db-8830-54df652ef76a' before making global git config changes
+build	Checkout code	2026-02-22T19:00:38.3154722Z Adding repository directory to the temporary git global config as a safe directory
+build	Checkout code	2026-02-22T19:00:38.3167037Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Bunny-run/Bunny-run
+build	Checkout code	2026-02-22T19:00:38.3205705Z Deleting the contents of '/home/runner/work/Bunny-run/Bunny-run'
+build	Checkout code	2026-02-22T19:00:38.3209464Z ##[group]Initializing the repository
+build	Checkout code	2026-02-22T19:00:38.3213279Z [command]/usr/bin/git init /home/runner/work/Bunny-run/Bunny-run
+build	Checkout code	2026-02-22T19:00:38.3329104Z hint: Using 'master' as the name for the initial branch. This default branch name
+build	Checkout code	2026-02-22T19:00:38.3330838Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build	Checkout code	2026-02-22T19:00:38.3332916Z hint: to use in all of your new repositories, which will suppress this warning,
+build	Checkout code	2026-02-22T19:00:38.3334297Z hint: call:
+build	Checkout code	2026-02-22T19:00:38.3334953Z hint:
+build	Checkout code	2026-02-22T19:00:38.3335652Z hint: 	git config --global init.defaultBranch <name>
+build	Checkout code	2026-02-22T19:00:38.3336265Z hint:
+build	Checkout code	2026-02-22T19:00:38.3336847Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build	Checkout code	2026-02-22T19:00:38.3337781Z hint: 'development'. The just-created branch can be renamed via this command:
+build	Checkout code	2026-02-22T19:00:38.3338798Z hint:
+build	Checkout code	2026-02-22T19:00:38.3339228Z hint: 	git branch -m <name>
+build	Checkout code	2026-02-22T19:00:38.3339698Z hint:
+build	Checkout code	2026-02-22T19:00:38.3340303Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build	Checkout code	2026-02-22T19:00:38.3341345Z Initialized empty Git repository in /home/runner/work/Bunny-run/Bunny-run/.git/
+build	Checkout code	2026-02-22T19:00:38.3350740Z [command]/usr/bin/git remote add origin https://github.com/Kaddu-Hacker/Bunny-run
+build	Checkout code	2026-02-22T19:00:38.3389653Z ##[endgroup]
+build	Checkout code	2026-02-22T19:00:38.3391102Z ##[group]Disabling automatic garbage collection
+build	Checkout code	2026-02-22T19:00:38.3393321Z [command]/usr/bin/git config --local gc.auto 0
+build	Checkout code	2026-02-22T19:00:38.3424766Z ##[endgroup]
+build	Checkout code	2026-02-22T19:00:38.3425520Z ##[group]Setting up auth
+build	Checkout code	2026-02-22T19:00:38.3431409Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	Checkout code	2026-02-22T19:00:38.3461755Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	Checkout code	2026-02-22T19:00:38.3814105Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Checkout code	2026-02-22T19:00:38.3845976Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	Checkout code	2026-02-22T19:00:38.4065095Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Checkout code	2026-02-22T19:00:38.4106486Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	Checkout code	2026-02-22T19:00:38.4349426Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build	Checkout code	2026-02-22T19:00:38.4389364Z ##[endgroup]
+build	Checkout code	2026-02-22T19:00:38.4390706Z ##[group]Fetching the repository
+build	Checkout code	2026-02-22T19:00:38.4401619Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +7f1d2fa2252fc51a487dc2806c295dc93c8618d2:refs/remotes/origin/main
+build	Checkout code	2026-02-22T19:00:39.0256274Z From https://github.com/Kaddu-Hacker/Bunny-run
+build	Checkout code	2026-02-22T19:00:39.0258017Z  * [new ref]         7f1d2fa2252fc51a487dc2806c295dc93c8618d2 -> origin/main
+build	Checkout code	2026-02-22T19:00:39.0289160Z ##[endgroup]
+build	Checkout code	2026-02-22T19:00:39.0290023Z ##[group]Determining the checkout info
+build	Checkout code	2026-02-22T19:00:39.0291468Z ##[endgroup]
+build	Checkout code	2026-02-22T19:00:39.0296325Z [command]/usr/bin/git sparse-checkout disable
+build	Checkout code	2026-02-22T19:00:39.0336213Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+build	Checkout code	2026-02-22T19:00:39.0362636Z ##[group]Checking out the ref
+build	Checkout code	2026-02-22T19:00:39.0366140Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+build	Checkout code	2026-02-22T19:00:39.0445343Z Switched to a new branch 'main'
+build	Checkout code	2026-02-22T19:00:39.0448638Z branch 'main' set up to track 'origin/main'.
+build	Checkout code	2026-02-22T19:00:39.0455298Z ##[endgroup]
+build	Checkout code	2026-02-22T19:00:39.0488049Z [command]/usr/bin/git log -1 --format=%H
+build	Checkout code	2026-02-22T19:00:39.0509869Z 7f1d2fa2252fc51a487dc2806c295dc93c8618d2
+build	set up JDK 17	﻿2026-02-22T19:00:39.0839060Z ##[group]Run actions/setup-java@v4
+build	set up JDK 17	2026-02-22T19:00:39.0839846Z with:
+build	set up JDK 17	2026-02-22T19:00:39.0840290Z   java-version: 17
+build	set up JDK 17	2026-02-22T19:00:39.0840856Z   distribution: temurin
+build	set up JDK 17	2026-02-22T19:00:39.0841453Z   cache: gradle
+build	set up JDK 17	2026-02-22T19:00:39.0841965Z   java-package: jdk
+build	set up JDK 17	2026-02-22T19:00:39.0842506Z   check-latest: false
+build	set up JDK 17	2026-02-22T19:00:39.0843063Z   server-id: github
+build	set up JDK 17	2026-02-22T19:00:39.0843619Z   server-username: GITHUB_ACTOR
+build	set up JDK 17	2026-02-22T19:00:39.0844554Z   server-password: GITHUB_TOKEN
+build	set up JDK 17	2026-02-22T19:00:39.0845299Z   overwrite-settings: true
+build	set up JDK 17	2026-02-22T19:00:39.0845956Z   job-status: success
+build	set up JDK 17	2026-02-22T19:00:39.0846791Z   token: ***
+build	set up JDK 17	2026-02-22T19:00:39.0847252Z ##[endgroup]
+build	set up JDK 17	2026-02-22T19:00:39.2852926Z ##[group]Installed distributions
+build	set up JDK 17	2026-02-22T19:00:39.2916505Z Resolved Java 17.0.18+8 from tool-cache
+build	set up JDK 17	2026-02-22T19:00:39.2917579Z Setting Java 17.0.18+8 as the default
+build	set up JDK 17	2026-02-22T19:00:39.2931178Z Creating toolchains.xml for JDK version 17 from temurin
+build	set up JDK 17	2026-02-22T19:00:39.3007531Z Writing to /home/runner/.m2/toolchains.xml
+build	set up JDK 17	2026-02-22T19:00:39.3008992Z 
+build	set up JDK 17	2026-02-22T19:00:39.3009256Z Java configuration:
+build	set up JDK 17	2026-02-22T19:00:39.3010438Z   Distribution: temurin
+build	set up JDK 17	2026-02-22T19:00:39.3011566Z   Version: 17.0.18+8
+build	set up JDK 17	2026-02-22T19:00:39.3012886Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build	set up JDK 17	2026-02-22T19:00:39.3014035Z 
+build	set up JDK 17	2026-02-22T19:00:39.3014779Z ##[endgroup]
+build	set up JDK 17	2026-02-22T19:00:39.3032834Z Creating settings.xml with server-id: github
+build	set up JDK 17	2026-02-22T19:00:39.3037359Z Writing to /home/runner/.m2/settings.xml
+build	set up JDK 17	2026-02-22T19:00:39.6285970Z gradle cache is not found
+build	Grant execute permission for gradlew	﻿2026-02-22T19:00:39.6439409Z ##[group]Run chmod +x gradlew
+build	Grant execute permission for gradlew	2026-02-22T19:00:39.6440573Z [36;1mchmod +x gradlew[0m
+build	Grant execute permission for gradlew	2026-02-22T19:00:39.6480018Z shell: /usr/bin/bash -e {0}
+build	Grant execute permission for gradlew	2026-02-22T19:00:39.6481031Z env:
+build	Grant execute permission for gradlew	2026-02-22T19:00:39.6482212Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build	Grant execute permission for gradlew	2026-02-22T19:00:39.6484268Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build	Grant execute permission for gradlew	2026-02-22T19:00:39.6485895Z ##[endgroup]
+build	Build with Gradle	﻿2026-02-22T19:00:39.6648109Z ##[group]Run ./gradlew assembleRelease
+build	Build with Gradle	2026-02-22T19:00:39.6649567Z [36;1m./gradlew assembleRelease[0m
+build	Build with Gradle	2026-02-22T19:00:39.6682602Z shell: /usr/bin/bash -e {0}
+build	Build with Gradle	2026-02-22T19:00:39.6683494Z env:
+build	Build with Gradle	2026-02-22T19:00:39.6684581Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build	Build with Gradle	2026-02-22T19:00:39.6686563Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build	Build with Gradle	2026-02-22T19:00:39.6688238Z ##[endgroup]
+build	Build with Gradle	2026-02-22T19:00:39.7870155Z Error: Could not find or load main class org.gradle.wrapper.GradleWrapperMain
+build	Build with Gradle	2026-02-22T19:00:39.7872746Z Caused by: java.lang.ClassNotFoundException: org.gradle.wrapper.GradleWrapperMain
+build	Build with Gradle	2026-02-22T19:00:39.7925755Z ##[error]Process completed with exit code 1.
+build	Post set up JDK 17	﻿2026-02-22T19:00:39.8144071Z Post job cleanup.
+build	Post Checkout code	﻿2026-02-22T19:00:40.0052553Z Post job cleanup.
+build	Post Checkout code	2026-02-22T19:00:40.1021647Z [command]/usr/bin/git version
+build	Post Checkout code	2026-02-22T19:00:40.1058524Z git version 2.52.0
+build	Post Checkout code	2026-02-22T19:00:40.1102665Z Temporarily overriding HOME='/home/runner/work/_temp/0cdc136e-3d05-4150-94d2-af83f8579423' before making global git config changes
+build	Post Checkout code	2026-02-22T19:00:40.1106011Z Adding repository directory to the temporary git global config as a safe directory
+build	Post Checkout code	2026-02-22T19:00:40.1109428Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Bunny-run/Bunny-run
+build	Post Checkout code	2026-02-22T19:00:40.1142811Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	Post Checkout code	2026-02-22T19:00:40.1178651Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	Post Checkout code	2026-02-22T19:00:40.1407694Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Post Checkout code	2026-02-22T19:00:40.1428632Z http.https://github.com/.extraheader
+build	Post Checkout code	2026-02-22T19:00:40.1441745Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+build	Post Checkout code	2026-02-22T19:00:40.1473173Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	Post Checkout code	2026-02-22T19:00:40.1691715Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Post Checkout code	2026-02-22T19:00:40.1722497Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	Complete job	﻿2026-02-22T19:00:40.2064693Z Cleaning up orphan processes

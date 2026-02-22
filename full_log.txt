@@ -1,0 +1,202 @@
+build	Set up job	﻿2026-02-22T19:08:03.5127516Z Current runner version: '2.331.0'
+build	Set up job	2026-02-22T19:08:03.5152539Z ##[group]Runner Image Provisioner
+build	Set up job	2026-02-22T19:08:03.5153633Z Hosted Compute Agent
+build	Set up job	2026-02-22T19:08:03.5154156Z Version: 20260123.484
+build	Set up job	2026-02-22T19:08:03.5155015Z Commit: 6bd6555ca37d84114959e1c76d2c01448ff61c5d
+build	Set up job	2026-02-22T19:08:03.5155672Z Build Date: 2026-01-23T19:41:17Z
+build	Set up job	2026-02-22T19:08:03.5156309Z Worker ID: {b1be14b1-35ff-4e7d-8eba-4bea061bf0c1}
+build	Set up job	2026-02-22T19:08:03.5157029Z Azure Region: northcentralus
+build	Set up job	2026-02-22T19:08:03.5157661Z ##[endgroup]
+build	Set up job	2026-02-22T19:08:03.5159054Z ##[group]Operating System
+build	Set up job	2026-02-22T19:08:03.5159755Z Ubuntu
+build	Set up job	2026-02-22T19:08:03.5160533Z 24.04.3
+build	Set up job	2026-02-22T19:08:03.5161004Z LTS
+build	Set up job	2026-02-22T19:08:03.5161570Z ##[endgroup]
+build	Set up job	2026-02-22T19:08:03.5162096Z ##[group]Runner Image
+build	Set up job	2026-02-22T19:08:03.5162641Z Image: ubuntu-24.04
+build	Set up job	2026-02-22T19:08:03.5163160Z Version: 20260201.15.1
+build	Set up job	2026-02-22T19:08:03.5164152Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260201.15/images/ubuntu/Ubuntu2404-Readme.md
+build	Set up job	2026-02-22T19:08:03.5165817Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260201.15
+build	Set up job	2026-02-22T19:08:03.5166700Z ##[endgroup]
+build	Set up job	2026-02-22T19:08:03.5167624Z ##[group]GITHUB_TOKEN Permissions
+build	Set up job	2026-02-22T19:08:03.5169743Z Contents: write
+build	Set up job	2026-02-22T19:08:03.5170557Z Metadata: read
+build	Set up job	2026-02-22T19:08:03.5171044Z ##[endgroup]
+build	Set up job	2026-02-22T19:08:03.5173113Z Secret source: Actions
+build	Set up job	2026-02-22T19:08:03.5174100Z Prepare workflow directory
+build	Set up job	2026-02-22T19:08:03.5574857Z Prepare all required actions
+build	Set up job	2026-02-22T19:08:03.5631030Z Getting action download info
+build	Set up job	2026-02-22T19:08:03.8824546Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+build	Set up job	2026-02-22T19:08:04.0080010Z Download action repository 'actions/setup-java@v4' (SHA:c1e323688fd81a25caa38c78aa6df2d33d3e20d9)
+build	Set up job	2026-02-22T19:08:04.6134672Z Download action repository 'softprops/action-gh-release@v2' (SHA:a06a81a03ee405af7f2048a818ed3f03bbf83c7b)
+build	Set up job	2026-02-22T19:08:05.0431078Z Complete job name: build
+build	Checkout code	﻿2026-02-22T19:08:05.1271037Z ##[group]Run actions/checkout@v4
+build	Checkout code	2026-02-22T19:08:05.1272383Z with:
+build	Checkout code	2026-02-22T19:08:05.1273144Z   repository: Kaddu-Hacker/Bunny-run
+build	Checkout code	2026-02-22T19:08:05.1274389Z   token: ***
+build	Checkout code	2026-02-22T19:08:05.1275099Z   ssh-strict: true
+build	Checkout code	2026-02-22T19:08:05.1275836Z   ssh-user: git
+build	Checkout code	2026-02-22T19:08:05.1276581Z   persist-credentials: true
+build	Checkout code	2026-02-22T19:08:05.1277431Z   clean: true
+build	Checkout code	2026-02-22T19:08:05.1278178Z   sparse-checkout-cone-mode: true
+build	Checkout code	2026-02-22T19:08:05.1279121Z   fetch-depth: 1
+build	Checkout code	2026-02-22T19:08:05.1279857Z   fetch-tags: false
+build	Checkout code	2026-02-22T19:08:05.1280858Z   show-progress: true
+build	Checkout code	2026-02-22T19:08:05.1281616Z   lfs: false
+build	Checkout code	2026-02-22T19:08:05.1282324Z   submodules: false
+build	Checkout code	2026-02-22T19:08:05.1283086Z   set-safe-directory: true
+build	Checkout code	2026-02-22T19:08:05.1284156Z ##[endgroup]
+build	Checkout code	2026-02-22T19:08:05.2409731Z Syncing repository: Kaddu-Hacker/Bunny-run
+build	Checkout code	2026-02-22T19:08:05.2412611Z ##[group]Getting Git version info
+build	Checkout code	2026-02-22T19:08:05.2413909Z Working directory is '/home/runner/work/Bunny-run/Bunny-run'
+build	Checkout code	2026-02-22T19:08:05.2415729Z [command]/usr/bin/git version
+build	Checkout code	2026-02-22T19:08:05.2481373Z git version 2.52.0
+build	Checkout code	2026-02-22T19:08:05.2508948Z ##[endgroup]
+build	Checkout code	2026-02-22T19:08:05.2532733Z Temporarily overriding HOME='/home/runner/work/_temp/bed68892-702f-4446-9bf1-bb716a153fe6' before making global git config changes
+build	Checkout code	2026-02-22T19:08:05.2537444Z Adding repository directory to the temporary git global config as a safe directory
+build	Checkout code	2026-02-22T19:08:05.2541563Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Bunny-run/Bunny-run
+build	Checkout code	2026-02-22T19:08:05.2579580Z Deleting the contents of '/home/runner/work/Bunny-run/Bunny-run'
+build	Checkout code	2026-02-22T19:08:05.2583665Z ##[group]Initializing the repository
+build	Checkout code	2026-02-22T19:08:05.2588708Z [command]/usr/bin/git init /home/runner/work/Bunny-run/Bunny-run
+build	Checkout code	2026-02-22T19:08:05.2711105Z hint: Using 'master' as the name for the initial branch. This default branch name
+build	Checkout code	2026-02-22T19:08:05.2713166Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build	Checkout code	2026-02-22T19:08:05.2715972Z hint: to use in all of your new repositories, which will suppress this warning,
+build	Checkout code	2026-02-22T19:08:05.2718420Z hint: call:
+build	Checkout code	2026-02-22T19:08:05.2719602Z hint:
+build	Checkout code	2026-02-22T19:08:05.2721419Z hint: 	git config --global init.defaultBranch <name>
+build	Checkout code	2026-02-22T19:08:05.2723376Z hint:
+build	Checkout code	2026-02-22T19:08:05.2725127Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build	Checkout code	2026-02-22T19:08:05.2728193Z hint: 'development'. The just-created branch can be renamed via this command:
+build	Checkout code	2026-02-22T19:08:05.2730886Z hint:
+build	Checkout code	2026-02-22T19:08:05.2732067Z hint: 	git branch -m <name>
+build	Checkout code	2026-02-22T19:08:05.2733397Z hint:
+build	Checkout code	2026-02-22T19:08:05.2735243Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build	Checkout code	2026-02-22T19:08:05.2737305Z Initialized empty Git repository in /home/runner/work/Bunny-run/Bunny-run/.git/
+build	Checkout code	2026-02-22T19:08:05.2740791Z [command]/usr/bin/git remote add origin https://github.com/Kaddu-Hacker/Bunny-run
+build	Checkout code	2026-02-22T19:08:05.2768105Z ##[endgroup]
+build	Checkout code	2026-02-22T19:08:05.2770685Z ##[group]Disabling automatic garbage collection
+build	Checkout code	2026-02-22T19:08:05.2772839Z [command]/usr/bin/git config --local gc.auto 0
+build	Checkout code	2026-02-22T19:08:05.2802447Z ##[endgroup]
+build	Checkout code	2026-02-22T19:08:05.2804597Z ##[group]Setting up auth
+build	Checkout code	2026-02-22T19:08:05.2809894Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	Checkout code	2026-02-22T19:08:05.2842491Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	Checkout code	2026-02-22T19:08:05.3214647Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Checkout code	2026-02-22T19:08:05.3245237Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	Checkout code	2026-02-22T19:08:05.3465443Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Checkout code	2026-02-22T19:08:05.3496203Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	Checkout code	2026-02-22T19:08:05.3718824Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build	Checkout code	2026-02-22T19:08:05.3752581Z ##[endgroup]
+build	Checkout code	2026-02-22T19:08:05.3753875Z ##[group]Fetching the repository
+build	Checkout code	2026-02-22T19:08:05.3761609Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b979566dd1923e8880af07d6d99056a53ae15439:refs/remotes/origin/main
+build	Checkout code	2026-02-22T19:08:05.6186629Z From https://github.com/Kaddu-Hacker/Bunny-run
+build	Checkout code	2026-02-22T19:08:05.6218896Z  * [new ref]         b979566dd1923e8880af07d6d99056a53ae15439 -> origin/main
+build	Checkout code	2026-02-22T19:08:05.6222798Z ##[endgroup]
+build	Checkout code	2026-02-22T19:08:05.6224046Z ##[group]Determining the checkout info
+build	Checkout code	2026-02-22T19:08:05.6225606Z ##[endgroup]
+build	Checkout code	2026-02-22T19:08:05.6226995Z [command]/usr/bin/git sparse-checkout disable
+build	Checkout code	2026-02-22T19:08:05.6268103Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+build	Checkout code	2026-02-22T19:08:05.6293815Z ##[group]Checking out the ref
+build	Checkout code	2026-02-22T19:08:05.6297239Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+build	Checkout code	2026-02-22T19:08:05.6369686Z Switched to a new branch 'main'
+build	Checkout code	2026-02-22T19:08:05.6372340Z branch 'main' set up to track 'origin/main'.
+build	Checkout code	2026-02-22T19:08:05.6380675Z ##[endgroup]
+build	Checkout code	2026-02-22T19:08:05.6419506Z [command]/usr/bin/git log -1 --format=%H
+build	Checkout code	2026-02-22T19:08:05.6443351Z b979566dd1923e8880af07d6d99056a53ae15439
+build	set up JDK 17	﻿2026-02-22T19:08:05.6789770Z ##[group]Run actions/setup-java@v4
+build	set up JDK 17	2026-02-22T19:08:05.6790996Z with:
+build	set up JDK 17	2026-02-22T19:08:05.6791721Z   java-version: 17
+build	set up JDK 17	2026-02-22T19:08:05.6792598Z   distribution: temurin
+build	set up JDK 17	2026-02-22T19:08:05.6793446Z   cache: gradle
+build	set up JDK 17	2026-02-22T19:08:05.6794191Z   java-package: jdk
+build	set up JDK 17	2026-02-22T19:08:05.6795096Z   check-latest: false
+build	set up JDK 17	2026-02-22T19:08:05.6795899Z   server-id: github
+build	set up JDK 17	2026-02-22T19:08:05.6796726Z   server-username: GITHUB_ACTOR
+build	set up JDK 17	2026-02-22T19:08:05.6798129Z   server-password: GITHUB_TOKEN
+build	set up JDK 17	2026-02-22T19:08:05.6799095Z   overwrite-settings: true
+build	set up JDK 17	2026-02-22T19:08:05.6800055Z   job-status: success
+build	set up JDK 17	2026-02-22T19:08:05.6801398Z   token: ***
+build	set up JDK 17	2026-02-22T19:08:05.6802189Z ##[endgroup]
+build	set up JDK 17	2026-02-22T19:08:05.8784296Z ##[group]Installed distributions
+build	set up JDK 17	2026-02-22T19:08:05.9087019Z Resolved Java 17.0.18+8 from tool-cache
+build	set up JDK 17	2026-02-22T19:08:05.9088601Z Setting Java 17.0.18+8 as the default
+build	set up JDK 17	2026-02-22T19:08:05.9101075Z Creating toolchains.xml for JDK version 17 from temurin
+build	set up JDK 17	2026-02-22T19:08:05.9177360Z Writing to /home/runner/.m2/toolchains.xml
+build	set up JDK 17	2026-02-22T19:08:05.9178456Z 
+build	set up JDK 17	2026-02-22T19:08:05.9178974Z Java configuration:
+build	set up JDK 17	2026-02-22T19:08:05.9180431Z   Distribution: temurin
+build	set up JDK 17	2026-02-22T19:08:05.9181667Z   Version: 17.0.18+8
+build	set up JDK 17	2026-02-22T19:08:05.9183137Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build	set up JDK 17	2026-02-22T19:08:05.9184188Z 
+build	set up JDK 17	2026-02-22T19:08:05.9185447Z ##[endgroup]
+build	set up JDK 17	2026-02-22T19:08:05.9204934Z Creating settings.xml with server-id: github
+build	set up JDK 17	2026-02-22T19:08:05.9207245Z Writing to /home/runner/.m2/settings.xml
+build	set up JDK 17	2026-02-22T19:08:06.1188819Z gradle cache is not found
+build	Generate Gradle Wrapper	﻿2026-02-22T19:08:06.1316586Z ##[group]Run gradle wrapper
+build	Generate Gradle Wrapper	2026-02-22T19:08:06.1317173Z [36;1mgradle wrapper[0m
+build	Generate Gradle Wrapper	2026-02-22T19:08:06.1356393Z shell: /usr/bin/bash -e {0}
+build	Generate Gradle Wrapper	2026-02-22T19:08:06.1356915Z env:
+build	Generate Gradle Wrapper	2026-02-22T19:08:06.1357410Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build	Generate Gradle Wrapper	2026-02-22T19:08:06.1358211Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build	Generate Gradle Wrapper	2026-02-22T19:08:06.1358808Z ##[endgroup]
+build	Generate Gradle Wrapper	2026-02-22T19:08:10.5085484Z 
+build	Generate Gradle Wrapper	2026-02-22T19:08:10.5086492Z Welcome to Gradle 9.3.1!
+build	Generate Gradle Wrapper	2026-02-22T19:08:10.5087219Z 
+build	Generate Gradle Wrapper	2026-02-22T19:08:10.5091982Z Here are the highlights of this release:
+build	Generate Gradle Wrapper	2026-02-22T19:08:10.5100540Z  - Test reporting improvements
+build	Generate Gradle Wrapper	2026-02-22T19:08:10.5101120Z  - Error and warning improvements
+build	Generate Gradle Wrapper	2026-02-22T19:08:10.5101472Z  - Build authoring improvements
+build	Generate Gradle Wrapper	2026-02-22T19:08:10.5101682Z 
+build	Generate Gradle Wrapper	2026-02-22T19:08:10.5102021Z For more details see https://docs.gradle.org/9.3.1/release-notes.html
+build	Generate Gradle Wrapper	2026-02-22T19:08:10.5102344Z 
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.2069156Z Starting a Gradle Daemon (subsequent builds will be faster)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3068325Z Could not write standard input to Gradle build daemon.
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3084976Z java.io.IOException: Stream closed
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3086878Z 	at java.base/java.lang.ProcessBuilder$NullOutputStream.write(ProcessBuilder.java:445)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3088039Z 	at java.base/java.io.OutputStream.write(OutputStream.java:162)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3089021Z 	at java.base/java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:81)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3090319Z 	at java.base/java.io.BufferedOutputStream.flush(BufferedOutputStream.java:142)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3091615Z 	at org.gradle.process.internal.streams.ExecOutputHandleRunner.writeBuffer(ExecOutputHandleRunner.java:98)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3093126Z 	at org.gradle.process.internal.streams.ExecOutputHandleRunner.forwardContent(ExecOutputHandleRunner.java:85)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3095917Z 	at org.gradle.process.internal.streams.ExecOutputHandleRunner.run(ExecOutputHandleRunner.java:64)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3097405Z 	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3099780Z 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3101364Z 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3102714Z 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3103677Z 	at java.base/java.lang.Thread.run(Thread.java:840)
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3364350Z 
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3366580Z FAILURE: Build failed with an exception.
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3368400Z 
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3368570Z * What went wrong:
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3371079Z Unable to start the daemon process.
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3371798Z This problem might be caused by incorrect configuration of the daemon.
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3373868Z For example, an unrecognized jvm option is used.For more details on the daemon, please refer to https://docs.gradle.org/9.3.1/userguide/gradle_daemon.html in the Gradle documentation.
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3382143Z Process command line: /usr/lib/jvm/temurin-17-jdk-amd64/bin/java --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED -XX:MaxPermSize=512m -Xmx2048m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -cp /usr/share/gradle-9.3.1/lib/gradle-daemon-main-9.3.1.jar -javaagent:/usr/share/gradle-9.3.1/lib/agents/gradle-instrumentation-agent-9.3.1.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 9.3.1
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3389912Z Please read the following process output to find out more:
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3390619Z -----------------------
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3390996Z Unrecognized VM option 'MaxPermSize=512m'
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3391530Z Error: Could not create the Java Virtual Machine.
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3391995Z Error: A fatal exception has occurred. Program will exit.
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3392233Z 
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3392266Z 
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3392332Z * Try:
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3392582Z > Run with --stacktrace option to get the stack trace.
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3392932Z > Run with --info or --debug option to get more log output.
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3393368Z > Run with --scan to get full insights from a Build Scan (powered by Develocity).
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3393766Z > Get more help at https://help.gradle.org.
+build	Generate Gradle Wrapper	2026-02-22T19:08:11.3518545Z ##[error]Process completed with exit code 1.
+build	Post set up JDK 17	﻿2026-02-22T19:08:11.3658809Z Post job cleanup.
+build	Post Checkout code	﻿2026-02-22T19:08:11.5433599Z Post job cleanup.
+build	Post Checkout code	2026-02-22T19:08:11.6367132Z [command]/usr/bin/git version
+build	Post Checkout code	2026-02-22T19:08:11.6427138Z git version 2.52.0
+build	Post Checkout code	2026-02-22T19:08:11.6449846Z Temporarily overriding HOME='/home/runner/work/_temp/051c3f34-6e93-45f6-bb1e-103780f4e10d' before making global git config changes
+build	Post Checkout code	2026-02-22T19:08:11.6451646Z Adding repository directory to the temporary git global config as a safe directory
+build	Post Checkout code	2026-02-22T19:08:11.6456439Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Bunny-run/Bunny-run
+build	Post Checkout code	2026-02-22T19:08:11.6503760Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	Post Checkout code	2026-02-22T19:08:11.6537807Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	Post Checkout code	2026-02-22T19:08:11.6788959Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Post Checkout code	2026-02-22T19:08:11.6812579Z http.https://github.com/.extraheader
+build	Post Checkout code	2026-02-22T19:08:11.6826771Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+build	Post Checkout code	2026-02-22T19:08:11.6862743Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	Post Checkout code	2026-02-22T19:08:11.7104334Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Post Checkout code	2026-02-22T19:08:11.7135225Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	Complete job	﻿2026-02-22T19:08:11.7459907Z Cleaning up orphan processes

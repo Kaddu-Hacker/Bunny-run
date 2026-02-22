@@ -1,0 +1,27 @@
+Checking the license for package Android SDK Build-Tools 30.0.3 in C:\Android\android-sdk\licenses
+License for package Android SDK Build-Tools 30.0.3 accepted.
+Preparing "Install Android SDK Build-Tools 30.0.3 (revision: 30.0.3)".
+Warning: Failed to read or create install properties file.
+Checking the license for package Android SDK Platform 33 in C:\Android\android-sdk\licenses
+License for package Android SDK Platform 33 accepted.
+Preparing "Install Android SDK Platform 33 (revision: 3)".
+Warning: Failed to read or create install properties file.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Could not determine the dependencies of task ':app:compileDebugJavaWithJavac'.
+> Failed to install the following SDK components:
+      platforms;android-33 Android SDK Platform 33
+      build-tools;30.0.3 Android SDK Build-Tools 30.0.3
+  The SDK directory is not writable (C:\Android\android-sdk)
+
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 2s

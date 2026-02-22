@@ -14,6 +14,13 @@ A robust, standalone Android automation app for **Bunny Runner 3D**, built with 
 
 ## 🛠️ How to Build (Google Colab)
 
+### ⚠️ Android 13+ Accessibility Note
+If you download this APK directly and try to enable the Accessibility Service, Android 13+ may block it. To fix this:
+1. Go to your device **Settings** > **Apps** > **BunnyBot**.
+2. Tap the **3 dots** in the top-right corner.
+3. Select **Allow restricted settings**.
+4. Now you can successfully enable the service in Accessibility Settings.
+
 We have removed the GitHub Actions workflow in favor of a manual, controllable Colab build.
 
 1. **Download this Repository**.

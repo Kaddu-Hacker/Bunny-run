@@ -2,16 +2,21 @@ package com.bunnybot
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.hardware.display.DisplayManager
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
@@ -19,6 +24,7 @@ import java.nio.ByteBuffer
 
 class BotService : AccessibilityService() {
     private var isRunning = false
+    private var isPlaying = false // Controlled by floating play/pause
     private val handler = Handler(Looper.getMainLooper())
     private var botRunnable: Runnable? = null
     
@@ -39,6 +45,19 @@ class BotService : AccessibilityService() {
     private var leftSensorY = 1500
     private var rightSensorX = 880
     private var rightSensorY = 1500
+    private var pathColorHex = 0x8D6E63
+
+    private val commandReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val command = intent?.getStringExtra("command")
+            when(command) {
+                "CALIBRATE" -> performCalibration()
+                "SCAN_UI" -> performUiScan()
+                "RESUME" -> isPlaying = true
+                "PAUSE" -> isPlaying = false
+            }
+        }
+    }
 
     enum class State {
         START_SCREEN, PLAYING, GAME_OVER
@@ -52,6 +71,13 @@ class BotService : AccessibilityService() {
         setServiceInfo(info)
 
         adDodgeManager = AdDodgeManager(this)
+        
+        val filter = IntentFilter("ACTION_BOT_COMMAND")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(commandReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(commandReceiver, filter)
+        }
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
@@ -77,21 +103,56 @@ class BotService : AccessibilityService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(commandReceiver)
+    }
+
     private fun performCalibration() {
-        Toast.makeText(this, "BotService: Calibrating path...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "BotService: Calibrating tripwires...", Toast.LENGTH_SHORT).show()
         val screen = captureScreen()
         if (screen != null) {
-            vision.calibratePathColor(screen)
-            Toast.makeText(this, "BotService: Path calibrated!", Toast.LENGTH_SHORT).show()
+            val cx = screen.width / 2
+            val cy = (screen.height * 0.8).toInt() // Bottom-center
+            pathColorHex = screen.getPixel(cx, cy) and 0xFFFFFF
+            
+            // Set tripwires 200 pixels left and right
+            leftSensorX = cx - 200
+            leftSensorY = cy
+            rightSensorX = cx + 200
+            rightSensorY = cy
+            
+            // Provide feedback: vibrate
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
+            } else {
+                vibrator.vibrate(200)
+            }
+
+            Toast.makeText(this, "BotService: Path calibrated (Tripwires set)!", Toast.LENGTH_SHORT).show()
             screen.recycle()
         }
     }
 
     private fun performUiScan() {
         Toast.makeText(this, "BotService: Scanning UI and saving locations...", Toast.LENGTH_SHORT).show()
-        // Here we would call OpenCV templateMatch to find "starting_btn.png" 
-        // and save coordinates to SharedPreferences.
-        // For now, using default coordinates.
+        val screen = captureScreen()
+        if (screen != null) {
+            // OpenCV template matching would happen here.
+            // Fake result: finding play button at center bottom
+            playButtonCoords[0] = screen.width / 2
+            playButtonCoords[1] = (screen.height * 0.85).toInt()
+            
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+            } else {
+                vibrator.vibrate(100)
+            }
+            Toast.makeText(this, "BotService: Play Button found!", Toast.LENGTH_SHORT).show()
+            screen.recycle()
+        }
     }
 
     private fun startBot() {
@@ -124,6 +185,7 @@ class BotService : AccessibilityService() {
 
     // THE BRAIN: Decides what to do every 100ms
     private fun gameLoop() {
+        if (!isPlaying) return
         val bitmap = captureScreen() ?: return
         val state = detectGameState(bitmap)
 

@@ -69,12 +69,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestScreenCapture() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                android.net.Uri.parse("package:$packageName"))
+            startActivityForResult(intent, 123)
+            Toast.makeText(this, "Please allow overlay first.", Toast.LENGTH_SHORT).show()
+            return
+        }
         startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), SCREEN_RECORD_REQUEST_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == SCREEN_RECORD_REQUEST_CODE) {
+        if (requestCode == 123) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) {
+                requestScreenCapture()
+            }
+        } else if (requestCode == SCREEN_RECORD_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK && data != null) {
                 startBot(resultCode, data)
             } else {
@@ -90,11 +101,14 @@ class MainActivity : AppCompatActivity() {
             putExtra("resultCode", resultCode)
             putExtra("data", data)
         }
+        val floatingIntent = Intent(this, FloatingMenuService::class.java)
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent)
+            startService(floatingIntent) // Not foreground, requires draw overlays
         } else {
             startService(intent)
+            startService(floatingIntent)
         }
         
         Toast.makeText(this, "Bot Started", Toast.LENGTH_SHORT).show()
@@ -105,6 +119,7 @@ class MainActivity : AppCompatActivity() {
         botRunning = false
         val intent = Intent(this, BotService::class.java).apply { action = "STOP_BOT" }
         startService(intent)
+        stopService(Intent(this, FloatingMenuService::class.java))
         Toast.makeText(this, "Bot Stopped", Toast.LENGTH_SHORT).show()
         updateUI()
     }

@@ -1,24 +1,42 @@
 package com.bunnybot
 
 import android.accessibilityservice.AccessibilityService
-import android.content.Context
 import android.os.Build
 import android.view.accessibility.AccessibilityNodeInfo
 
 class Controller(private val service: AccessibilityService) {
 
     /**
-     * Performs a tap at the specified coordinates
+     * Performs a tap at the specified coordinates using accessibility service
      */
     fun tap(x: Int, y: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val path = android.graphics.Path()
-            path.moveTo(x.toFloat(), y.toFloat())
-            val stroke = android.view.GestureDescription.StrokeDescription(path, 0, 50)
-            val gesture = android.view.GestureDescription.Builder()
-                .addStroke(stroke)
-                .build()
-            service.dispatchGesture(gesture, null, null)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val path = android.graphics.Path()
+                path.moveTo(x.toFloat(), y.toFloat())
+                
+                // Use reflection to handle GestureDescription which may not be available
+                val gestureDescClass = Class.forName("android.view.GestureDescription")
+                val strokeDescClass = Class.forName("android.view.GestureDescription\$StrokeDescription")
+                val builderClass = Class.forName("android.view.GestureDescription\$Builder")
+                
+                val strokeDescConstructor = strokeDescClass.getConstructor(android.graphics.Path::class.java, Long::class.javaPrimitiveType, Long::class.javaPrimitiveType)
+                val stroke = strokeDescConstructor.newInstance(path, 0L, 50L)
+                
+                val builderConstructor = builderClass.getConstructor()
+                val builder = builderConstructor.newInstance()
+                
+                val addStrokeMethod = builderClass.getMethod("addStroke", strokeDescClass)
+                addStrokeMethod.invoke(builder, stroke)
+                
+                val buildMethod = builderClass.getMethod("build")
+                val gesture = buildMethod.invoke(builder)
+                
+                val dispatchGestureMethod = AccessibilityService::class.java.getMethod("dispatchGesture", gestureDescClass, AccessibilityService.GestureResultCallback::class.java)
+                dispatchGestureMethod.invoke(service, gesture, null)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -26,15 +44,33 @@ class Controller(private val service: AccessibilityService) {
      * Performs a swipe gesture to close the app
      */
     fun swipeToClose() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val path = android.graphics.Path()
-            path.moveTo(540f, 100f)
-            path.lineTo(540f, 1800f)
-            val stroke = android.view.GestureDescription.StrokeDescription(path, 0, 300)
-            val gesture = android.view.GestureDescription.Builder()
-                .addStroke(stroke)
-                .build()
-            service.dispatchGesture(gesture, null, null)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val path = android.graphics.Path()
+                path.moveTo(540f, 100f)
+                path.lineTo(540f, 1800f)
+                
+                val gestureDescClass = Class.forName("android.view.GestureDescription")
+                val strokeDescClass = Class.forName("android.view.GestureDescription\$StrokeDescription")
+                val builderClass = Class.forName("android.view.GestureDescription\$Builder")
+                
+                val strokeDescConstructor = strokeDescClass.getConstructor(android.graphics.Path::class.java, Long::class.javaPrimitiveType, Long::class.javaPrimitiveType)
+                val stroke = strokeDescConstructor.newInstance(path, 0L, 300L)
+                
+                val builderConstructor = builderClass.getConstructor()
+                val builder = builderConstructor.newInstance()
+                
+                val addStrokeMethod = builderClass.getMethod("addStroke", strokeDescClass)
+                addStrokeMethod.invoke(builder, stroke)
+                
+                val buildMethod = builderClass.getMethod("build")
+                val gesture = buildMethod.invoke(builder)
+                
+                val dispatchGestureMethod = AccessibilityService::class.java.getMethod("dispatchGesture", gestureDescClass, AccessibilityService.GestureResultCallback::class.java)
+                dispatchGestureMethod.invoke(service, gesture, null)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

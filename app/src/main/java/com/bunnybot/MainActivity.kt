@@ -1,6 +1,9 @@
 package com.bunnybot
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -16,8 +19,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var calibrateButton: Button
     private lateinit var scanButton: Button
     private lateinit var modeButton: Button
+    
     private var botRunning = false
     private var rootMode = true
+
+    private lateinit var mediaProjectionManager: MediaProjectionManager
+    private val SCREEN_RECORD_REQUEST_CODE = 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,23 +36,27 @@ class MainActivity : AppCompatActivity() {
         scanButton = findViewById(R.id.scan_button)
         modeButton = findViewById(R.id.mode_button)
 
+        mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+
         loadConfig()
         updateUI()
 
         startButton.setOnClickListener {
             if (!botRunning) {
-                startBot()
+                requestScreenCapture()
             } else {
                 stopBot()
             }
         }
 
         calibrateButton.setOnClickListener {
-            calibratePath()
+            sendActionToBot("CALIBRATE_PATH")
+            Toast.makeText(this, "Calibration starting...", Toast.LENGTH_SHORT).show()
         }
 
         scanButton.setOnClickListener {
-            scanUI()
+            sendActionToBot("SCAN_UI")
+            Toast.makeText(this, "Scanning UI elements...", Toast.LENGTH_SHORT).show()
         }
 
         modeButton.setOnClickListener {
@@ -57,33 +68,50 @@ class MainActivity : AppCompatActivity() {
         checkAccessibilityService()
     }
 
-    private fun startBot() {
+    private fun requestScreenCapture() {
+        startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), SCREEN_RECORD_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SCREEN_RECORD_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                startBot(resultCode, data)
+            } else {
+                Toast.makeText(this, "Screen capture permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun startBot(resultCode: Int, data: Intent) {
         botRunning = true
-        val intent = Intent(this, BotService::class.java)
+        val intent = Intent(this, BotService::class.java).apply {
+            action = "START_BOT"
+            putExtra("resultCode", resultCode)
+            putExtra("data", data)
+        }
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent)
         } else {
             startService(intent)
         }
+        
         Toast.makeText(this, "Bot Started", Toast.LENGTH_SHORT).show()
         updateUI()
     }
 
     private fun stopBot() {
         botRunning = false
-        stopService(Intent(this, BotService::class.java))
+        val intent = Intent(this, BotService::class.java).apply { action = "STOP_BOT" }
+        startService(intent)
         Toast.makeText(this, "Bot Stopped", Toast.LENGTH_SHORT).show()
         updateUI()
     }
 
-    private fun calibratePath() {
-        Toast.makeText(this, "Calibration started. Play the game and let the bot learn the path color.", Toast.LENGTH_LONG).show()
-        // This would be handled by BotService
-    }
-
-    private fun scanUI() {
-        Toast.makeText(this, "Scanning UI elements...", Toast.LENGTH_SHORT).show()
-        // This would be handled by BotService
+    private fun sendActionToBot(actionString: String) {
+        val intent = Intent(this, BotService::class.java).apply { action = actionString }
+        startService(intent)
     }
 
     private fun updateUI() {

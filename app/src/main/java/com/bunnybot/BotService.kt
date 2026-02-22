@@ -7,25 +7,42 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.hardware.display.DisplayManager
+import android.media.ImageReader
+import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.view.Display
 import android.view.accessibility.AccessibilityEvent
-import android.view.accessibility.AccessibilityNodeInfo
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import java.io.File
-import kotlin.math.abs
+import java.nio.ByteBuffer
 
 class BotService : AccessibilityService() {
     private var isRunning = false
     private val handler = Handler(Looper.getMainLooper())
     private var botRunnable: Runnable? = null
-    private val vision = Vision()
+    
+    private lateinit var adDodgeManager: AdDodgeManager
     private val controller = Controller(this)
-    private var pathColor: Int = 0x8D6E63
-    private var rootMode = true
+    private val vision = Vision()
+
+    // Screen Capture Variables
+    private var mediaProjection: MediaProjection? = null
+    private var imageReader: ImageReader? = null
+    private var screenWidth = 1080
+    private var screenHeight = 2400
+    private var screenDensity = 400
+
+    // Calibration Coordinates (Defaults)
+    private var playButtonCoords = intArrayOf(540, 1800)
+    private var leftSensorX = 200
+    private var leftSensorY = 1500
+    private var rightSensorX = 880
+    private var rightSensorY = 1500
+
+    enum class State {
+        START_SCREEN, PLAYING, GAME_OVER
+    }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -34,16 +51,47 @@ class BotService : AccessibilityService() {
         info.eventTypes = AccessibilityEvent.TYPES_ALL_MASK
         setServiceInfo(info)
 
-        loadConfig()
-        startBot()
+        adDodgeManager = AdDodgeManager(this)
     }
 
-    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        // Handle accessibility events if needed
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
+    override fun onInterrupt() {}
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        when (intent?.action) {
+            "START_BOT" -> {
+                val resultCode = intent.getIntExtra("resultCode", 0)
+                val data = intent.getParcelableExtra<Intent>("data")
+                if (data != null && resultCode != 0 && mediaProjection == null) {
+                    val mpm = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+                    val projection = mpm.getMediaProjection(resultCode, data)
+                    val metrics = resources.displayMetrics
+                    setupMediaProjection(projection, metrics)
+                }
+                startBot()
+            }
+            "STOP_BOT" -> stopBot()
+            "CALIBRATE_PATH" -> performCalibration()
+            "SCAN_UI" -> performUiScan()
+        }
+        return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun onInterrupt() {
-        // Handle interruption
+    private fun performCalibration() {
+        Toast.makeText(this, "BotService: Calibrating path...", Toast.LENGTH_SHORT).show()
+        val screen = captureScreen()
+        if (screen != null) {
+            vision.calibratePathColor(screen)
+            Toast.makeText(this, "BotService: Path calibrated!", Toast.LENGTH_SHORT).show()
+            screen.recycle()
+        }
+    }
+
+    private fun performUiScan() {
+        Toast.makeText(this, "BotService: Scanning UI and saving locations...", Toast.LENGTH_SHORT).show()
+        // Here we would call OpenCV templateMatch to find "starting_btn.png" 
+        // and save coordinates to SharedPreferences.
+        // For now, using default coordinates.
     }
 
     private fun startBot() {
@@ -55,14 +103,13 @@ class BotService : AccessibilityService() {
             .setContentText("Bot is running...")
             .setSmallIcon(android.R.drawable.ic_media_play)
             .build()
-
         startForeground(1, notification)
 
         botRunnable = object : Runnable {
             override fun run() {
                 if (isRunning) {
-                    runBotLoop()
-                    handler.postDelayed(this, 500)
+                    gameLoop()
+                    handler.postDelayed(this, 100) // 100ms loop
                 }
             }
         }
@@ -73,66 +120,103 @@ class BotService : AccessibilityService() {
         isRunning = false
         botRunnable?.let { handler.removeCallbacks(it) }
         stopForeground(true)
-        stopSelf()
     }
 
-    private fun runBotLoop() {
-        try {
-            val screen = captureScreen()
-            if (screen != null) {
-                val (state, coords) = vision.getCurrentState(screen)
+    // THE BRAIN: Decides what to do every 100ms
+    private fun gameLoop() {
+        val bitmap = captureScreen() ?: return
+        val state = detectGameState(bitmap)
 
-                when (state) {
-                    "start" -> {
-                        controller.tap(coords[0], coords[1])
-                    }
-                    "win", "end" -> {
-                        controller.swipeToClose()
-                        controller.relaunchGame()
-                    }
-                    "in_game" -> {
-                        val edges = vision.findPathEdge(screen)
-                        if (edges.isNotEmpty()) {
-                            val nextX = edges[0][0]
-                            val nextY = edges[0][1]
-                            controller.tap(nextX, nextY)
-                        }
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        when (state) {
+            State.START_SCREEN -> controller.tap(playButtonCoords[0], playButtonCoords[1])
+            State.PLAYING -> runZigZagLogic(bitmap)
+            State.GAME_OVER -> adDodgeManager.triggerReset()
+        }
+        bitmap.recycle()
+    }
+
+    // THE EYES: Uses OpenCV/Template Matching logic
+    private fun detectGameState(screen: Bitmap): State {
+        // TODO: Replace with actual OpenCV templateMatch call
+        // if (templateMatch(screen, "starting_btn.png") > 0.9) return State.START_SCREEN
+        // if (templateMatch(screen, "winning_btn.png") > 0.9) return State.GAME_OVER
+        
+        // Temporary logic utilizing the old Vision logic for fallback
+        val currentState = vision.getCurrentState(screen)
+        return when (currentState.first) {
+            "start" -> State.START_SCREEN
+            "end", "win" -> State.GAME_OVER
+            else -> State.PLAYING
         }
     }
 
+    // THE REFLEXES: Checks path colors
+    private fun runZigZagLogic(screen: Bitmap) {
+        // Prevent array out of bounds on different screen metrics
+        val lx = leftSensorX.coerceIn(0, screen.width - 1)
+        val ly = leftSensorY.coerceIn(0, screen.height - 1)
+        val rx = rightSensorX.coerceIn(0, screen.width - 1)
+        val ry = rightSensorY.coerceIn(0, screen.height - 1)
+
+        val leftPixel = screen.getPixel(lx, ly)
+        val rightPixel = screen.getPixel(rx, ry)
+
+        if (isColorWhite(leftPixel) || isColorWhite(rightPixel)) {
+            // Change direction tap
+            controller.tap(screen.width / 2, screen.height / 2)
+        }
+    }
+
+    private fun isColorWhite(pixelColor: Int): Boolean {
+        val r = (pixelColor shr 16) and 0xFF
+        val g = (pixelColor shr 8) and 0xFF
+        val b = pixelColor and 0xFF
+        // White fence tolerance (values > 200 are generally white/bright)
+        return r > 200 && g > 200 && b > 200
+    }
+
+    // MediaProjection Screen Capture logic
     private fun captureScreen(): Bitmap? {
-        return try {
-            val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-            val display = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
-            
-            // For accessibility service, we can use rootless screen capture
-            // This is a simplified version - in production, use MediaProjection
-            null // Placeholder
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+        val image = imageReader?.acquireLatestImage() ?: return null
+        val planes = image.planes
+        val buffer: ByteBuffer = planes[0].buffer
+        val pixelStride = planes[0].pixelStride
+        val rowStride = planes[0].rowStride
+        val rowPadding = rowStride - pixelStride * image.width
+
+        val bitmap = Bitmap.createBitmap(
+            image.width + rowPadding / pixelStride,
+            image.height,
+            Bitmap.Config.ARGB_8888
+        )
+        bitmap.copyPixelsFromBuffer(buffer)
+        image.close()
+
+        return Bitmap.createBitmap(bitmap, 0, 0, image.width, image.height)
     }
 
-    private fun loadConfig() {
-        val configFile = File(filesDir, "config.txt")
-        if (configFile.exists()) {
-            val config = configFile.readText()
-            rootMode = config.contains("rootMode=true")
-            val colorMatch = Regex("pathColor=([0-9a-fA-F]+)").find(config)
-            if (colorMatch != null) {
-                pathColor = colorMatch.groupValues[1].toInt(16)
-            }
-        }
+    // Call this from MainActivity once MediaProjection is granted
+    fun setupMediaProjection(projection: MediaProjection, metrics: android.util.DisplayMetrics) {
+        mediaProjection = projection
+        screenWidth = metrics.widthPixels
+        screenHeight = metrics.heightPixels
+        screenDensity = metrics.densityDpi
+
+        imageReader = ImageReader.newInstance(
+            screenWidth, screenHeight, PixelFormat.RGBA_8888, 2
+        )
+
+        mediaProjection?.createVirtualDisplay(
+            "BunnyBotScreenCapture",
+            screenWidth, screenHeight, screenDensity,
+            DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+            imageReader?.surface, null, null
+        )
     }
 
-    private fun saveConfig() {
-        val configFile = File(filesDir, "config.txt")
-        configFile.writeText("rootMode=$rootMode\npathColor=${Integer.toHexString(pathColor)}")
+    // Calibration endpoints
+    fun calibrateSensors(lx: Int, ly: Int, rx: Int, ry: Int) {
+        leftSensorX = lx; leftSensorY = ly
+        rightSensorX = rx; rightSensorY = ry
     }
 }

@@ -23,11 +23,14 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew assembleRelease
+      - name: Build with Gradle (Debug Signed)
+        run: ./gradlew assembleDebug
 
       - name: Get Build Number
         id: build_number
@@ -42,6 +45,6 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            app/build/outputs/apk/release/*.apk
+            app/build/outputs/apk/debug/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

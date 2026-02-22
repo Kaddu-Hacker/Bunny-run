@@ -1,0 +1,3 @@
+-keep class com.bunnybot.** { *; }
+-keepclassmembers class com.bunnybot.** { *; }
+-dontwarn java.lang.invoke.*

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BunnyBot</string>
+    <string name="start_bot">🚀 Start Bot</string>
+    <string name="stop_bot">🛑 Stop Bot</string>
+    <string name="calibrate">🎨 Calibrate Path</string>
+    <string name="auto_scan">🤖 Auto Scan UI</string>
+    <string name="toggle_mode">🔄 Toggle Mode</string>
+    <string name="tutorial">📖 Tutorial</string>
+</resources>

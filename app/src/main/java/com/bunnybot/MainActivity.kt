@@ -1,0 +1,119 @@
+package com.bunnybot
+
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.provider.Settings
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import java.io.File
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var statusText: TextView
+    private lateinit var startButton: Button
+    private lateinit var calibrateButton: Button
+    private lateinit var scanButton: Button
+    private lateinit var modeButton: Button
+    private var botRunning = false
+    private var rootMode = true
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        statusText = findViewById(R.id.status_text)
+        startButton = findViewById(R.id.start_button)
+        calibrateButton = findViewById(R.id.calibrate_button)
+        scanButton = findViewById(R.id.scan_button)
+        modeButton = findViewById(R.id.mode_button)
+
+        loadConfig()
+        updateUI()
+
+        startButton.setOnClickListener {
+            if (!botRunning) {
+                startBot()
+            } else {
+                stopBot()
+            }
+        }
+
+        calibrateButton.setOnClickListener {
+            calibratePath()
+        }
+
+        scanButton.setOnClickListener {
+            scanUI()
+        }
+
+        modeButton.setOnClickListener {
+            rootMode = !rootMode
+            saveConfig()
+            updateUI()
+        }
+
+        checkAccessibilityService()
+    }
+
+    private fun startBot() {
+        botRunning = true
+        val intent = Intent(this, BotService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
+        Toast.makeText(this, "Bot Started", Toast.LENGTH_SHORT).show()
+        updateUI()
+    }
+
+    private fun stopBot() {
+        botRunning = false
+        stopService(Intent(this, BotService::class.java))
+        Toast.makeText(this, "Bot Stopped", Toast.LENGTH_SHORT).show()
+        updateUI()
+    }
+
+    private fun calibratePath() {
+        Toast.makeText(this, "Calibration started. Play the game and let the bot learn the path color.", Toast.LENGTH_LONG).show()
+        // This would be handled by BotService
+    }
+
+    private fun scanUI() {
+        Toast.makeText(this, "Scanning UI elements...", Toast.LENGTH_SHORT).show()
+        // This would be handled by BotService
+    }
+
+    private fun updateUI() {
+        val mode = if (rootMode) "ROOT" else "ACCESSIBILITY"
+        statusText.text = "Status: ${if (botRunning) "RUNNING" else "IDLE"}\nMode: $mode"
+        startButton.text = if (botRunning) "🛑 Stop Bot" else "🚀 Start Bot"
+    }
+
+    private fun checkAccessibilityService() {
+        if (!isAccessibilityServiceEnabled()) {
+            Toast.makeText(this, "Please enable Accessibility Service for BunnyBot", Toast.LENGTH_LONG).show()
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+        }
+    }
+
+    private fun isAccessibilityServiceEnabled(): Boolean {
+        val accessibilityManager = getSystemService(ACCESSIBILITY_SERVICE) as android.view.accessibility.AccessibilityManager
+        return accessibilityManager.isEnabled
+    }
+
+    private fun loadConfig() {
+        val configFile = File(filesDir, "config.txt")
+        if (configFile.exists()) {
+            val config = configFile.readText()
+            rootMode = config.contains("rootMode=true")
+        }
+    }
+
+    private fun saveConfig() {
+        val configFile = File(filesDir, "config.txt")
+        configFile.writeText("rootMode=$rootMode")
+    }
+}

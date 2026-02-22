@@ -29,3 +29,4 @@ local.properties
 # Buildozer
 .buildozer/
 bin/
+gradle/wrapper/gradle-7.5-bin.zip

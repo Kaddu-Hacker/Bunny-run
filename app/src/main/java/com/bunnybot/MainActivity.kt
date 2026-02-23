@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startBot(resultCode: Int, data: Intent) {
         botRunning = true
-        val intent = Intent(this, BotService::class.java).apply {
+        val intent = Intent(this, BunnyAccessibilityService::class.java).apply {
             action = "START_BOT"
             putExtra("resultCode", resultCode)
             putExtra("data", data)
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun stopBot() {
         botRunning = false
-        val intent = Intent(this, BotService::class.java).apply { action = "STOP_BOT" }
+        val intent = Intent(this, BunnyAccessibilityService::class.java).apply { action = "STOP_BOT" }
         startService(intent)
         stopService(Intent(this, FloatingMenuService::class.java))
         Toast.makeText(this, "Bot Stopped", Toast.LENGTH_SHORT).show()
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendActionToBot(actionString: String) {
-        val intent = Intent(this, BotService::class.java).apply { action = actionString }
+        val intent = Intent(this, BunnyAccessibilityService::class.java).apply { action = actionString }
         startService(intent)
     }
 

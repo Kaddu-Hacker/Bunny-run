@@ -100,14 +100,12 @@ class FloatingMenuService : Service() {
         var isPlaying = false
 
         btnScan.setOnClickListener {
-            val intent = Intent("ACTION_BOT_COMMAND")
-            intent.putExtra("command", "SCAN_UI")
+            val intent = Intent("ACTION_SCAN")
             sendBroadcast(intent)
         }
 
         btnCalibrate.setOnClickListener {
-            val intent = Intent("ACTION_BOT_COMMAND")
-            intent.putExtra("command", "CALIBRATE")
+            val intent = Intent("ACTION_CALIBRATE")
             sendBroadcast(intent)
         }
 
@@ -117,14 +115,13 @@ class FloatingMenuService : Service() {
                 btnToggle.text = "⏸ Stop Play"
                 botTitle.text = "BunnyBot: RUNNING"
                 btnToggle.setBackgroundColor(0xFFE53935.toInt()) // Red
+                sendBroadcast(Intent("ACTION_START"))
             } else {
                 btnToggle.text = "▶ Start Play"
                 botTitle.text = "BunnyBot: IDLE"
                 btnToggle.setBackgroundColor(0xFF4CAF50.toInt()) // Green
+                sendBroadcast(Intent("ACTION_STOP"))
             }
-            val intent = Intent("ACTION_BOT_COMMAND")
-            intent.putExtra("command", if (isPlaying) "RESUME" else "PAUSE")
-            sendBroadcast(intent)
         }
 
         btnClose.setOnClickListener {

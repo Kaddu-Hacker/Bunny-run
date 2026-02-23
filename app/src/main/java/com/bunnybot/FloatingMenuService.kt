@@ -20,6 +20,7 @@ class FloatingMenuService : Service() {
 
     private lateinit var windowManager: WindowManager
     private lateinit var floatingView: View
+    private var calibrationReceiver: BroadcastReceiver? = null
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -127,6 +128,21 @@ class FloatingMenuService : Service() {
         btnClose.setOnClickListener {
             stopSelf()
         }
+
+        calibrationReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action == "ACTION_CALIBRATION_DONE") {
+                    btnCalibrate.setBackgroundColor(0xFF9C27B0.toInt()) // Purple
+                    btnCalibrate.text = "Calibrated ✓"
+                }
+            }
+        }
+        val filter = IntentFilter("ACTION_CALIBRATION_DONE")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(calibrationReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(calibrationReceiver, filter)
+        }
     }
 
     override fun onDestroy() {
@@ -134,5 +150,6 @@ class FloatingMenuService : Service() {
         if (::floatingView.isInitialized) {
             windowManager.removeView(floatingView)
         }
+        calibrationReceiver?.let { unregisterReceiver(it) }
     }
 }

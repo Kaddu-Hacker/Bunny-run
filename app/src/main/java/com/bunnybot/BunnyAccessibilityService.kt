@@ -31,12 +31,29 @@ class BunnyAccessibilityService : AccessibilityService() {
     private var screenHeight = 2400
     private var screenDensity = 400
 
+    private var pathColorHex = 0x8D6E63
+    private var leftSensorX = 200
+    private var leftSensorY = 1500
+    private var rightSensorX = 880
+    private var rightSensorY = 1500
+    private var isPlaying = false
+    private var lastTapTime: Long = 0
+
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
-                "ACTION_START" -> Log.d("BunnyBot", "Received ACTION_START")
-                "ACTION_STOP" -> Log.d("BunnyBot", "Received ACTION_STOP")
-                "ACTION_CALIBRATE" -> Log.d("BunnyBot", "Received ACTION_CALIBRATE")
+                "ACTION_START" -> {
+                    Log.d("BunnyBot", "Received ACTION_START")
+                    isPlaying = true
+                }
+                "ACTION_STOP" -> {
+                    Log.d("BunnyBot", "Received ACTION_STOP")
+                    isPlaying = false
+                }
+                "ACTION_CALIBRATE" -> {
+                    Log.d("BunnyBot", "Received ACTION_CALIBRATE")
+                    calibrateRoadColor()
+                }
                 "ACTION_SCAN" -> {
                     Log.d("BunnyBot", "Received ACTION_SCAN - Running Vision Check")
                     val targets = listOf("starting_btn.png", "winning_btn.png", "ending_btn.png")
@@ -110,8 +127,29 @@ class BunnyAccessibilityService : AccessibilityService() {
             setOnImageAvailableListener({ reader ->
                 val image = reader.acquireLatestImage()
                 if (image != null) {
-                    // We immediately close the image to prevent OOM
-                    // We will only read the latest image on demand during the game loop
+                    if (isPlaying) {
+                        try {
+                            val planes = image.planes
+                            val buffer = planes[0].buffer
+                            val pixelStride = planes[0].pixelStride
+                            val rowStride = planes[0].rowStride
+                            val rowPadding = rowStride - pixelStride * screenWidth
+
+                            val bitmap = Bitmap.createBitmap(
+                                screenWidth + rowPadding / pixelStride,
+                                screenHeight,
+                                Bitmap.Config.ARGB_8888
+                            )
+                            bitmap.copyPixelsFromBuffer(buffer)
+                            
+                            val cropped = Bitmap.createBitmap(bitmap, 0, 0, screenWidth, screenHeight)
+                            runZigZag(cropped)
+                            cropped.recycle()
+                            bitmap.recycle()
+                        } catch (e: Exception) {
+                            Log.e("BunnyBot", "Error in image reader loop", e)
+                        }
+                    }
                     image.close()
                 }
             }, null)
@@ -235,5 +273,49 @@ class BunnyAccessibilityService : AccessibilityService() {
             .build()
         
         dispatchGesture(gesture, null, null)
+    }
+
+    private fun calibrateRoadColor() {
+        val screen = captureScreenBitmap() ?: return
+        val cx = screen.width / 2
+        val cy = (screen.height * 0.8).toInt()
+        pathColorHex = screen.getPixel(cx, cy) and 0xFFFFFF
+        
+        leftSensorX = cx - 200
+        leftSensorY = cy
+        rightSensorX = cx + 200
+        rightSensorY = cy
+        
+        screen.recycle()
+        Log.d("BunnyBot", "Road color calibrated. Tripwires set.")
+        sendBroadcast(Intent("ACTION_CALIBRATION_DONE"))
+    }
+
+    private fun isFence(color: Int): Boolean {
+        val r = (color shr 16) and 0xFF
+        val g = (color shr 8) and 0xFF
+        val b = color and 0xFF
+        return r > 200 && g > 200 && b > 200
+    }
+
+    private fun runZigZag(screen: Bitmap) {
+        if (!isPlaying) return
+        
+        val lx = leftSensorX.coerceIn(0, screen.width - 1)
+        val ly = leftSensorY.coerceIn(0, screen.height - 1)
+        val rx = rightSensorX.coerceIn(0, screen.width - 1)
+        val ry = rightSensorY.coerceIn(0, screen.height - 1)
+
+        val leftPixel = screen.getPixel(lx, ly)
+        val rightPixel = screen.getPixel(rx, ry)
+
+        if (isFence(leftPixel) || isFence(rightPixel)) {
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastTapTime > 100) {
+                Log.d("BunnyBot", "Fence detected! Tapping...")
+                performTap(screen.width / 2f, screen.height / 2f)
+                lastTapTime = currentTime
+            }
+        }
     }
 }

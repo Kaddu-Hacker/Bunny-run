@@ -22,6 +22,13 @@ import org.opencv.core.Core
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 import java.io.IOException
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
+
+enum class GameState {
+    MENU, PLAYING, RESETTING
+}
 
 class BunnyAccessibilityService : AccessibilityService() {
 
@@ -37,7 +44,10 @@ class BunnyAccessibilityService : AccessibilityService() {
     private var rightSensorX = 880
     private var rightSensorY = 1500
     private var isPlaying = false
+    private var currentState = GameState.MENU
     private var lastTapTime: Long = 0
+    private val handler = Handler(Looper.getMainLooper())
+    private var scanRunnable: Runnable? = null
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -45,10 +55,13 @@ class BunnyAccessibilityService : AccessibilityService() {
                 "ACTION_START" -> {
                     Log.d("BunnyBot", "Received ACTION_START")
                     isPlaying = true
+                    currentState = GameState.MENU
+                    startScanLoop()
                 }
                 "ACTION_STOP" -> {
                     Log.d("BunnyBot", "Received ACTION_STOP")
                     isPlaying = false
+                    stopScanLoop()
                 }
                 "ACTION_CALIBRATE" -> {
                     Log.d("BunnyBot", "Received ACTION_CALIBRATE")
@@ -142,9 +155,11 @@ class BunnyAccessibilityService : AccessibilityService() {
                             )
                             bitmap.copyPixelsFromBuffer(buffer)
                             
-                            val cropped = Bitmap.createBitmap(bitmap, 0, 0, screenWidth, screenHeight)
-                            runZigZag(cropped)
-                            cropped.recycle()
+                                val cropped = Bitmap.createBitmap(bitmap, 0, 0, screenWidth, screenHeight)
+                                if (currentState == GameState.PLAYING) {
+                                    runZigZag(cropped)
+                                }
+                                cropped.recycle()
                             bitmap.recycle()
                         } catch (e: Exception) {
                             Log.e("BunnyBot", "Error in image reader loop", e)
@@ -164,6 +179,7 @@ class BunnyAccessibilityService : AccessibilityService() {
     }
 
     private fun stopMediaProjection() {
+        stopScanLoop()
         mediaProjection?.stop()
         mediaProjection = null
         imageReader?.close()
@@ -317,5 +333,90 @@ class BunnyAccessibilityService : AccessibilityService() {
                 lastTapTime = currentTime
             }
         }
+    }
+
+    private fun startScanLoop() {
+        scanRunnable = object : Runnable {
+            override fun run() {
+                if (!isPlaying) return
+
+                when (currentState) {
+                    GameState.MENU -> {
+                        val startPos = findTemplateInScreen("starting_btn.png")
+                        if (startPos != null) {
+                            Log.d("BunnyBot", "Start button found, starting game")
+                            Toast.makeText(this@BunnyAccessibilityService, "Bot: Starting Game", Toast.LENGTH_SHORT).show()
+                            performTap(startPos.first.toFloat(), startPos.second.toFloat())
+                            currentState = GameState.PLAYING
+                        }
+                    }
+                    GameState.PLAYING -> {
+                        val winPos = findTemplateInScreen("winning_btn.png")
+                        val endPos = findTemplateInScreen("ending_btn.png")
+
+                        if (winPos != null || endPos != null) {
+                            Log.d("BunnyBot", "Ad or End screen detected. Resetting...")
+                            Toast.makeText(this@BunnyAccessibilityService, "Bot: Ad Detected, Resetting...", Toast.LENGTH_SHORT).show()
+                            currentState = GameState.RESETTING
+                            triggerAdDodge()
+                        }
+                    }
+                    GameState.RESETTING -> {
+                        // Wait for reset to finish
+                    }
+                }
+
+                handler.postDelayed(this, 1000) // Run scan every 1 second
+            }
+        }
+        handler.post(scanRunnable!!)
+    }
+
+    private fun stopScanLoop() {
+        scanRunnable?.let { handler.removeCallbacks(it) }
+        scanRunnable = null
+        currentState = GameState.MENU
+    }
+
+    private fun triggerAdDodge() {
+        // Open Recents Menu
+        performGlobalAction(GLOBAL_ACTION_RECENTS)
+        
+        handler.postDelayed({
+            // Swipe away the app (assuming it's the center card)
+            val path = Path().apply {
+                moveTo(screenWidth / 2f, screenHeight / 2f)
+                lineTo(screenWidth / 2f, 0f) // Swipe up
+            }
+            val swipe = GestureDescription.Builder()
+                .addStroke(GestureDescription.StrokeDescription(path, 0, 300))
+                .build()
+            
+            dispatchGesture(swipe, object : AccessibilityService.GestureResultCallback() {
+                override fun onCompleted(gestureDescription: GestureDescription?) {
+                    super.onCompleted(gestureDescription)
+                    Log.d("BunnyBot", "Swipe completed")
+                    
+                    handler.postDelayed({
+                        // Relaunch Game
+                        try {
+                            // Note: Replace "com.bunny.runner3D.dg" with the actual package name if different
+                            val launchIntent = packageManager.getLaunchIntentForPackage("com.bunny.runner3D.dg")
+                            if (launchIntent != null) {
+                                launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivity(launchIntent)
+                                Log.d("BunnyBot", "Game relaunched")
+                                Toast.makeText(this@BunnyAccessibilityService, "Bot: Game Relaunched", Toast.LENGTH_SHORT).show()
+                                currentState = GameState.MENU
+                            } else {
+                                Log.e("BunnyBot", "Launch intent not found for com.bunny.runner3D.dg")
+                            }
+                        } catch (e: Exception) {
+                            Log.e("BunnyBot", "Failed to relaunch game", e)
+                        }
+                    }, 2000)
+                }
+            }, null)
+        }, 1500) // Wait for Recents menu to slide in
     }
 }

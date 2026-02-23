@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var calibrateButton: Button
     private lateinit var scanButton: Button
     private lateinit var modeButton: Button
+    private lateinit var tutorialButton: Button
     
     private var botRunning = false
     private var rootMode = true
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         calibrateButton = findViewById(R.id.calibrate_button)
         scanButton = findViewById(R.id.scan_button)
         modeButton = findViewById(R.id.mode_button)
+        tutorialButton = findViewById(R.id.btn_tutorial)
 
         mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
 
@@ -63,6 +66,10 @@ class MainActivity : AppCompatActivity() {
             rootMode = !rootMode
             saveConfig()
             updateUI()
+        }
+
+        tutorialButton.setOnClickListener {
+            showTutorialDialog()
         }
 
         checkAccessibilityService()
@@ -158,5 +165,21 @@ class MainActivity : AppCompatActivity() {
     private fun saveConfig() {
         val configFile = File(filesDir, "config.txt")
         configFile.writeText("rootMode=$rootMode")
+    }
+
+    private fun showTutorialDialog() {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("📖 BunnyBot Tutorial")
+            .setMessage("Welcome to BunnyBot!\n\n" +
+                        "1. Enable Accessibility Settings when prompted.\n" +
+                        "2. Click 'Start Bot' to request screen capture permission.\n" +
+                        "3. A floating UI will appear. Open Bunny Runner 3D.\n" +
+                        "4. Get to the Game phase (running on the brown path).\n" +
+                        "5. Click 'Calibrate' to lock onto the path color. (Button turns purple).\n" +
+                        "6. Click 'Start Play' to run the bot!\n\n" +
+                        "The bot will automatically dodge Left/Right, and auto-restart if an Ad appears.")
+            .setPositiveButton("Got it!") { dialogInterface, _ -> dialogInterface.dismiss() }
+            .create()
+        dialog.show()
     }
 }

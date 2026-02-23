@@ -1,72 +1,54 @@
-# 🐰 Bunny Bot: Pure Python Edition (Google Colab Build)
+# 🐰 Bunny Bot: Native Android Kotlin Edition
 
-A robust, standalone Android automation app for **Bunny Runner 3D**, built with Python, Kivy, and OpenCV. This version is optimized for stability and battery life.
+A robust, standalone Android automation app for **Bunny Runner 3D**, built natively in Kotlin with Accessibility Services, MediaProjection, and OpenCV for real-time game state detection and fence dodging.
 
 ---
 
 ## ✨ Key Features
-- **🖼️ Smart Vision System**: Uses `cv2.matchTemplate` with dynamic loading to "see" the game.
-- **🔋 Battery Optimized**: Runs vision checks on a 0.5s interval (Clock) instead of every frame.
-- **📱 Floating UI**: All controls overlay the game using a robust `FloatLayout` architecture.
-- **☁️ Google Colab Build**: No complex local setup required. Build your APK in the cloud.
+- **🖼️ Real-Time Vision System**: Uses MediaProjection and OpenCV Template Matching to detect game states directly in RAM, achieving instant reaction times without saving screenshots.
+- **⚡ "ZigZag" Tripwire Engine**: Samples the bottom corners of the path to detect the RGB signature of white fences. The bot taps the screen instantly.
+- **🔄 Auto Ad-Dodge**: Automatically detects the "Win" or "Game Over" screens and performs a "Human Reset" (opening Recents and swiping the app away) to bypass unskippable 30-second ads, then relaunches the game.
+- **📱 Floating UI**: An overlay dashboard that allows you to easily calibrate the bot and start/stop automation while inside the game.
 
 ---
 
-## 🛠️ How to Build (Google Colab)
+## 🛠️ How to Use
 
-### ⚠️ Android 13+ Accessibility Note
-If you download this APK directly and try to enable the Accessibility Service, Android 13+ may block it. To fix this:
-1. Go to your device **Settings** > **Apps** > **BunnyBot**.
-2. Tap the **3 dots** in the top-right corner.
-3. Select **Allow restricted settings**.
-4. Now you can successfully enable the service in Accessibility Settings.
-
-We have removed the GitHub Actions workflow in favor of a manual, controllable Colab build.
-
-1. **Download this Repository**.
-2. **Open Google Colab**: [colab.research.google.com](https://colab.research.google.com/).
-3. **Upload Files**: Upload the following to the Colab runtime:
-    - `colab_build.ipynb`
-    - `main.py`
-    - `buildozer.spec`
-    - `core/` folder
-    - `ui/` folder
-    - `templates/` folder
-4. **Open `colab_build.ipynb`** and run the cells in order.
-5. **Download APK**: Once finished, download your APK from the `bin/` directory.
+1. **Install the APK**: Download the latest Release APK and install it on your Android device.
+2. **Permissions**:
+   - The app will prompt you for "Display over other apps" (Overlay) permission.
+   - Go to your device **Settings** > **Accessibility** and enable **BunnyBot Accessibility Service**. *(Note: On Android 13+, you may need to allow "Restricted Settings" in the app info page first).*
+3. **Start the Bot**: Open the app and click "Start Bot".
+4. **Grant Screen Capture**: The app will ask for screen recording permission (MediaProjection). Allow this so the bot's "Eyes" can see the game.
+5. **Calibrate**: Open *Bunny Runner 3D*. Once your bunny is on the brown running path, tap the **Calibrate Path** button on the floating menu. The button will turn purple when locked on.
+6. **Play**: Tap **Start Play** on the floating menu. The bot will now handle turning and ad-dodging automatically!
 
 ---
 
-## 🏗️ New Architecture
+## 🏗️ Architecture (Kotlin & UI)
 
-### 1. Vision (`core/vision.py`)
-- **Logic**: Grayscale Template Matching (Threshold: 0.85).
-- **Templates**: All reference images are stored in `templates/`.
-- **Dynamic**: Automatically loads any `.png` found in the folder.
+### 1. Vision & Motor (`BunnyAccessibilityService.kt`)
+- **Accessibility**: Uses `dispatchGesture` to simulate human taps and swipes entirely within the Android framework.
+- **Vision**: Uses `ImageReader` wired to a `VirtualDisplay` to capture pixel-perfect frames. 
+- **Core Loop**: `Imgproc.matchTemplate` searches for button templates (`starting_btn.png`, etc.) while `bitmap.getPixel` samples tripwires during active gameplay.
+- **State Machine**: Tracks `MENU`, `PLAYING`, and `RESETTING` to avoid clicking blindly during ad transitions.
 
-### 2. UI (`main.py` & `ui/dashboard.py`)
-- **Root**: `FloatLayout`.
-- **Overlay**: The dashboard sits at the bottom 40% of the screen.
-
-### 3. Controller (`core/controller.py`)
-- **Persistent Shell**: Maintains an open connection to the Android shell for instant tap response.
+### 2. Floating Dashboard (`FloatingMenuService.kt`)
+- **WindowManager**: Draws the UI directly over the game using `TYPE_APPLICATION_OVERLAY`.
+- **Broadcasts**: Uses Intent Broadcasting to communicate silently with the background `BunnyAccessibilityService`.
 
 ---
 
 ## 📁 Project Structure
 
 ```text
-.
-├── colab_build.ipynb    # Build Script
-├── main.py              # FloatLayout App Entry
-├── buildozer.spec       # Build Configuration
-├── templates/           # Reference Images (starting_btn.png, etc.)
-├── core/                # Business Logic
-│   ├── vision.py        # BunnyVision (Template Matching)
-│   ├── controller.py    # Persistent Shell Controller
-│   └── ...
-└── ui/
-    └── dashboard.py     # Menu UI
+app/src/main/
+├── java/com/bunnybot/
+│   ├── MainActivity.kt               # Permission Handler & Tutorial
+│   ├── BunnyAccessibilityService.kt  # The Core Engine (Vision + Taps)
+│   └── FloatingMenuService.kt        # The UI Overlay
+├── res/layout/                       # UI Layouts
+└── assets/                           # Template PNGs
 ```
 
 ---

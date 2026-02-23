@@ -44,6 +44,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="🔄 Toggle Mode"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btn_tutorial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📖 How to Use"
         android:textSize="16sp" />
 
 </LinearLayout>
